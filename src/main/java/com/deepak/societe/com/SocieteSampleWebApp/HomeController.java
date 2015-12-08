@@ -30,12 +30,7 @@ public class HomeController {
 	public @ResponseBody int countUsers() {
 		return new HashMap<String,UserData>(new CSVUtil().parseCsv()).size();
 	}
-	
-	@RequestMapping(value="/searchById",method=RequestMethod.GET)
-	public @ResponseBody UserData search(@RequestParam(value ="id") String id){
-	    return new HashMap<String,UserData>(new CSVUtil().parseCsv()).get(id);
-	}
-	
+		
 	@RequestMapping(value="/greetings",method=RequestMethod.GET)
 	public @ResponseBody String wish(){
 		Calendar c = Calendar.getInstance();
@@ -49,5 +44,20 @@ public class HomeController {
 		    return "Good Evening";
 		}
 		return null;
+	}
+	//Search is based on id or status and both also
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public @ResponseBody ArrayList<UserData> search(@RequestParam(value = "id", required = false,defaultValue = "null",@RequestParam(value = "status", required = false,defaultValue = "null") String status) {
+		HashMap<String, UserData> hm = new HashMap<String, UserData>(new CSVUtil().parseCsv());
+		ArrayList<UserData> list = new ArrayList<UserData>();
+		for (UserData UserData : hm.values()) {
+			if (UserData.getId().compareTo(ID) == 0) {
+				list.add(UserData);
+			}
+			if(UserData.getStatus().compareTo(status)==0){
+				list.add(userData);
+			}
+		}
+		return list;
 	}
 }
